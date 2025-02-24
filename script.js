@@ -1,4 +1,7 @@
 // Game board (2D array)
+let gameOver = false;
+
+
 let gameBoard = [
     ['', '', 'T', '', ''],
     ['M', '', '', 'T', ''],
@@ -98,17 +101,30 @@ function checkInteractions() {
     player.collectTreasure();
     player.fightMonster();
 
-    // Check for game win condition (all treasures collected)
-    if (player.treasuresCollected === 3) {
-        document.getElementById('gameMessages').innerText = "Victory! All treasures collected!";
-        disableMovement();
+    // Check for game win condition (reached the door)
+    if (gameBoard[player.x][player.y] === 'D' && !gameOver) {
+        document.getElementById('gameMessages').innerText = "Victory! You've reached the Dragon's Treasure!";
+        gameOver = true;  // Set game over flag to true
+        disableMovement();  // Disable further movement
+    }
+
+    // If player is out of health and hasn't already lost
+    if (player.health <= 0 && !gameOver) {
+        document.getElementById('gameMessages').innerText = "Game Over! You landed on a monster.";
+        gameOver = true;  // Set game over flag to true
+        disableMovement();  // Disable further movement
     }
 }
+
+
 
 // Disable player movement after game over or victory
 function disableMovement() {
     document.removeEventListener('keydown', handleKeyPress);
+    // You can add more UI tweaks to show that the game is over, like adding a button to restart.
 }
+
+
 
 // Event listener for keypresses
 document.addEventListener('keydown', handleKeyPress);
